@@ -1,0 +1,33 @@
+#euler 1: sum of numbers below 1000 divisible by 3 or 5
+
+0 "sum" save # stores 0 in sum
+1 # top of stack is now 1
+"loop" goto # goto label loop
+
+"div35" label
+	duplicate "n" save #store a copy of top of stack in register 1
+	"n" load 3 % 0 = # n divisible by 3 (0 or 1 is pushed)
+	"n" load 5 % 0 = # by 5
+	or # check if the top two numbers of stack are 1
+	return
+
+"addsum" label
+	duplicate
+	"sum" load + "sum" save # increase sum with top of stack
+	return
+
+"loop" label
+	"div35" call # puts true/false (1/0) on stack
+	
+	"addsum" "" cmp call # if top of stack is non-zero then goto addsum, else (keep going)
+
+	1 + #add 1 to top of stack
+
+	duplicate 1000 < "loop" "" cmp goto # if (top of stack < 10) then goto loop else (keep going)
+
+	"sum" load print
+	"test" printstack
+	"final stack size: " print size print
+	clear
+	0 exit
+

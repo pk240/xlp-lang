@@ -1,0 +1,26 @@
+# euler 2 sum of even fibonaccis
+
+0 "sum" save
+1
+1
+"fib" goto
+
+"sum even" label
+	duplicate "sum" load + "sum" save
+	return
+
+"fib" label
+	duplicate "f" save
+	+
+	duplicate 4000000 > "end" "" cmp goto
+	duplicate 2 % "" "sum even" cmp call
+	"f" load
+	reverse
+	"fib" goto
+
+"end" label
+	"sum" load
+	"hello "
+	"world!" +
+	printstack
+

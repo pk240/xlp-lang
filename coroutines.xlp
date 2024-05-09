@@ -1,0 +1,38 @@
+#default executable stack is main_exe
+#default calculation stack is main_stack
+#default branch history stack is main_bh
+
+"init" switch
+5
+"multiplying data by " print duplicate print
+"mult" save
+"test" switch
+
+"loop" label
+	"data_mult" switch
+	is_error "done" "" cmp goto
+	print
+	"loop" goto
+
+"done" label "done\n" print
+"test" switch
+
+@init #this thread is only used to populate the data stack. you have to `switch` to this exe stack
+"" "data" use
+8 9 11 2 +
+
+@main_exe #the below commands will be added to the (default) main exe stack (just like the first few commands)
+"test" switch
+
+#a different coroutine does not conflict with labels. this coroutine reuses "loop" label
+#it uses the "mult" variable that was saved to in the main exe
+@data_mult #these commands are put on a stack that can be `switch`-ed to.
+"data_jh" "data" use
+"loop" label "data" pop is_error "" "mult" cmp call yield "loop" goto
+"mult" label "mult" load * return
+
+#on initial run, test_data is empty so the + pops 1 error. int value of error is 0 so it's fine.
+@test
+"" "test_data" use
+1 + "test:" print duplicate print
+
